@@ -32,15 +32,20 @@ public class ArenaBorderPlugin extends JavaPlugin {
         if(!mbwCheck()) return;
         if(!registerAddon()) return;
 
+        reloadConfig();
         loadCustomConfigs();
         new ArenaBorderAddon(this).registerCommands();
         new ArenaBorderAddon(this).registerEvents();
     }
 
+    public void reloadConfig() {
+        config.reload(configFile);
+    }
+
     private void loadCustomConfigs() {
         try {
             arenasConfig = YamlDocument.create(
-                    new File(directory.toFile(), "config.yml"),
+                    new File(directory.toFile(), "arenas.yml"),
                     getResource("arenas.yml"),
                     GeneralSettings.builder().setSerializer(
                             SpigotSerializer.getInstance()).build(),
