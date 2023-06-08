@@ -8,6 +8,7 @@ import org.bukkit.World;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import pl.dejwideek.arenaborderaddon.ArenaBorderPlugin;
+import pl.dejwideek.arenaborderaddon.configs.Config;
 
 import java.util.ArrayList;
 
@@ -23,13 +24,14 @@ public class GameStartEvent implements Listener {
     @EventHandler
     public void onGameStart(RoundStartEvent e) {
 
-        YamlDocument config = plugin.config;
+        Config config = plugin.config;
+        YamlDocument arenasConfig = plugin.arenasConfig;
 
         Arena arena = e.getArena();
         RegenerationType regenerationType = arena.getRegenerationType();
         ArrayList<String> disabledArenas = new ArrayList<>();
 
-        for(String s : config.getStringList("disabled-arenas")) {
+        for(String s : config.DISABLED_ARENAS) {
             disabledArenas.add(s);
         }
 
@@ -38,23 +40,20 @@ public class GameStartEvent implements Listener {
                 if(regenerationType.equals(RegenerationType.WORLD)) {
                     World world = arena.getGameWorld();
 
-                    double centerLocationX = config
-                            .getDouble("border.arenas."
+                    double centerLocationX = arenasConfig
+                            .getDouble("arenas."
                                     + arena.getName() + ".center-location.x");
-                    double centerLocationZ = config
-                            .getDouble("border.arenas."
+                    double centerLocationZ = arenasConfig
+                            .getDouble("arenas."
                                     + arena.getName() + ".center-location.z");
-                    double borderSize = config
-                            .getDouble("border.arenas."
+                    double borderSize = arenasConfig
+                            .getDouble("arenas."
                                     + arena.getName() + ".size");
-                    double defaultCenterLocationX = config
-                            .getDouble("border.default.center-location.x");
-                    double defaultCenterLocationZ = config
-                            .getDouble("border.default.center-location.z");
-                    double defaultBorderSize = config
-                            .getDouble("border.default.size");
+                    double defaultCenterLocationX = config.BORDER.DEFAULT.CENTER_LOCATION.X;
+                    double defaultCenterLocationZ = config.BORDER.DEFAULT.CENTER_LOCATION.Z;
+                    double defaultBorderSize = config.BORDER.DEFAULT.SIZE;
 
-                    if(config.getSection("border.arenas."
+                    if(arenasConfig.getSection("arenas."
                             + arena.getName()) != null) {
                         world.getWorldBorder().setCenter(centerLocationX, centerLocationZ);
                         world.getWorldBorder().setSize(borderSize);

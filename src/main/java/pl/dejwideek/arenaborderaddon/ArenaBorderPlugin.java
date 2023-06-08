@@ -8,29 +8,40 @@ import dev.dejvokep.boostedyaml.settings.updater.UpdaterSettings;
 import dev.dejvokep.boostedyaml.spigot.SpigotSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import pl.dejwideek.arenaborderaddon.configs.Config;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 @SuppressWarnings("ALL")
 public class ArenaBorderPlugin extends JavaPlugin {
 
-    public YamlDocument config;
+    private static File configFile;
+    private static Path directory;
+    public static Config config = Config.IMP;
+    public YamlDocument arenasConfig;
+
+    public ArenaBorderPlugin() {
+        this.directory = new ArenaBorderAddon(this)
+                .getDataFolder().toPath();
+        this.configFile = directory.resolve("config.yml").toFile();
+    }
 
     public void onEnable() {
         if(!mbwCheck()) return;
         if(!registerAddon()) return;
 
-        loadConfig();
+        loadCustomConfigs();
         new ArenaBorderAddon(this).registerCommands();
         new ArenaBorderAddon(this).registerEvents();
     }
 
-    private void loadConfig() {
+    private void loadCustomConfigs() {
         try {
-            config = YamlDocument.create(
-                    new File(new ArenaBorderAddon(this).getDataFolder(), "config.yml"),
-                    getResource("config.yml"),
+            arenasConfig = YamlDocument.create(
+                    new File(directory.toFile(), "config.yml"),
+                    getResource("arenas.yml"),
                     GeneralSettings.builder().setSerializer(
                             SpigotSerializer.getInstance()).build(),
                     LoaderSettings.DEFAULT,
