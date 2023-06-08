@@ -22,15 +22,13 @@ public class ArenaBorderPlugin extends JavaPlugin {
     public static Config config = Config.IMP;
     public YamlDocument arenasConfig;
 
-    public ArenaBorderPlugin() {
-        this.directory = new ArenaBorderAddon(this)
-                .getDataFolder().toPath();
-        this.configFile = directory.resolve("config.yml").toFile();
-    }
-
     public void onEnable() {
         if(!mbwCheck()) return;
         if(!registerAddon()) return;
+
+        this.directory = new ArenaBorderAddon(this)
+                .getDataFolder().toPath();
+        this.configFile = directory.resolve("config.yml").toFile();
 
         reloadConfig();
         loadCustomConfigs();
